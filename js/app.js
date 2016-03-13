@@ -1,11 +1,5 @@
 'use strict';
-let windowHeight = ko.observable(window.innerHeight);
-
-
-
-
 let initialMap = {
-  // TODO get size of containing element for height and width
   width: '100%',
   frameborder: '0',
   height: '100%',

@@ -32,9 +32,10 @@
       </div>
     </aside>
 
-    <section class="col-md-10 map-area" data-bind="with: currentMap()">
-      <iframe class="full-window-height" data-bind="attr: {width: width, height: height, frameborder: frameborder, style: style, src: source}"></iframe>
-      <!-- map goes here -->
+    <section class="col-md-10 full-window-height" id="map-area">
+      <!-- iframe class="full-window-height" data-bind="attr: {width: width, height: height, frameborder: frameborder, style: style, src: source}"></iframe -->
+      <script src="js/map.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBI2IgE-hBI2jxk4kbBqklCZ_u_SNKekkY&callback=initGoogleMap" async defer></script>
     </section>
 
   </main>
