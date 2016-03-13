@@ -1,0 +1,23 @@
+.full-window-height {
+  height: 100vh;
+}
+
+.map-area {
+  padding-left: 0;
+}
+
+.square-corners {
+  border-radius: 0;
+}
+
+.input-group {
+  width: 100%;
+}
+
+aside {
+  /*overflow: scroll;*/
+  background: black;
+  margin-right: 0;
+  padding-right: 0 !important;
+  border: none;
+}

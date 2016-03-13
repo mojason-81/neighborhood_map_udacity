@@ -1,25 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Neighborhood Map web app built as part of Udacity Front End Nanodegree">
-    <meta name="author" content="Jason Force">
-    <title>Neighborhood Map</title>
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <!-- Custom styles for this template -->
-    <!--link href="style/style.css" rel="stylesheet"-->
-  </head>
-  <body class="container-fluid">
-    <main>
-    </main>
-    <footer>
-      <script src="assets/lib/jquery-2.2.1.min.js"></script>
-      <script src="assets/lib/knockout-3.4.0.js"></script>
-      <script src="js/script.js"></script>
-    </footer>
-  </body>
-  </html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="Neighborhood Map web app built as part of Udacity Front End Nanodegree">
+  <meta name="author" content="Jason Force">
+  <title>Neighborhood Map</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <!-- Custom styles for this template -->
+  <link href="style/style.css" rel="stylesheet">
+</head>
+
+<body style="overflow:hidden">
+
+  <main class="row">
+
+    <aside class="col-md-2 full-window-height">
+      <!-- list and search filter here -->
+      <div class="input-group">
+        <input type="text" class="form-control square-corners" placeholder="Search" name="srch-term">
+        <div class="input-group-btn">
+          <button class="btn btn-default square-corners"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+      </div>
+
+      <div class="btn-group-vertical" role="group" aria-label="...">
+      </div>
+    </aside>
+
+    <section class="col-md-10 map-area" data-bind="with: currentMap()">
+      <iframe class="full-window-height" data-bind="attr: {width: width, height: height, frameborder: frameborder, style: style, src: source}"></iframe>
+      <!-- map goes here -->
+    </section>
+
+  </main>
+
+  <footer>
+    <script src="assets/lib/jquery-2.2.1.min.js"></script>
+    <script src="assets/lib/knockout-3.4.0.js"></script>
+    <script src="js/app.js"></script>
+  </footer>
+</body>
+
+</html>
