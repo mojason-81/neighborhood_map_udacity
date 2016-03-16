@@ -1,9 +1,26 @@
 .full-window-height {
-  height: 100vh;
+  height: 99vh;
+  /* TODO need media query to change this
+      and make it smaller on a smaller screen
+      to leave room for a header containing
+      a button to toggle the side menu
+  */
 }
 
-.map-area {
+body {
+  width: 99vw;
+  margin: 0;
+  padding-right: 0;
   padding-left: 0;
+  background: black;
+}
+
+#map-area {
+  padding-left: 0;
+}
+
+#map {
+  height: 100%;
 }
 
 .square-corners {
@@ -14,10 +31,7 @@
   width: 100%;
 }
 
-aside {
-  /*overflow: scroll;*/
+nav {
+  padding-right: 0;
   background: black;
-  margin-right: 0;
-  padding-right: 0 !important;
-  border: none;
 }

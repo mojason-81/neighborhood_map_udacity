@@ -15,29 +15,48 @@
   <link href="style/style.css" rel="stylesheet">
 </head>
 
-<body style="overflow:hidden">
+<body>
+    <div class="row">
+      <div class="col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                          More
+                      </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    <div class="input-group">
+                      <input type="text" class="form-control square-corners" placeholder="Search" name="srch-term">
+                      <div class="input-group-btn">
+                        <button class="btn btn-default square-corners"><i class="glyphicon glyphicon-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-  <main class="row">
-
-    <aside class="col-md-2 full-window-height">
-      <!-- list and search filter here -->
-      <div class="input-group">
-        <input type="text" class="form-control square-corners" placeholder="Search" name="srch-term">
-        <div class="input-group-btn">
-          <button class="btn btn-default square-corners"><i class="glyphicon glyphicon-search"></i></button>
-        </div>
+            </div>
+          </li>
+          <li><a href="">Nav item again</a></li>
+          <li><a href="">One more nav</a></li>
+          <li><a href="">Another nav item</a></li>
+        </ul>
       </div>
-
-      <div class="btn-group-vertical" role="group" aria-label="...">
-      </div>
-    </aside>
 
     <section class="col-md-10 full-window-height" id="map-area">
-      <!-- iframe class="full-window-height" data-bind="attr: {width: width, height: height, frameborder: frameborder, style: style, src: source}"></iframe -->
-      <script src="js/map.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBI2IgE-hBI2jxk4kbBqklCZ_u_SNKekkY&callback=initGoogleMap" async defer></script>
+      <div id="map">
+        <script src="js/map.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDEdBNtICL0HXO3B0bbb1R3QUetJyH6HU&callback=initGoogleMap" async defer></script>
+      </div>
     </section>
 
+    </div>
   </main>
 
   <footer>
