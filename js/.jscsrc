@@ -1,7 +1,0 @@
-{
-  "maximumLineLength": null,
-  "requireCamelCaseOrUpperCaseIdentifiers": null,
-  "requireSpacesInAnonymousFunctionExpression": {
-    "beforeOpeningCurlyBrace": true
-  }
-}
