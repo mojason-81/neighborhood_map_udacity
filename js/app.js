@@ -1,24 +1,48 @@
 'use strict';
-let initialMap = {
-  width: '100%',
-  frameborder: '0',
-  height: '100%',
-  style: 'border:0',
-  source: 'https://www.google.com/maps/embed/v1/search?&key=AIzaSyBI2IgE-hBI2jxk4kbBqklCZ_u_SNKekkY' +
-          '&q=721+NW+6th+St+Blue+Springs,+MO+64014&zoom=14 allowfullscreen'
+var initialPlaces = [
+  {name: 'Stroud\'s'},
+  {name: 'Corner Cafe'},
+  {name: 'Natural Grocers'},
+  {name: 'Little Blue River'},
+  {name: 'Costco'}
+];
+
+//var Place = function(data) {
+//  this.name = ko.observable(data);
+//};
+
+var View = function() {
+  var $toggleListBtn = $('#toggle-list-btn');
 };
 
-let GoogleMap = function(data) {
-  this.width = ko.observable(data.width);
-  this.height = ko.observable(data.height);
-  this.frameborder = ko.observable(data.frameborder);
-  this.style = ko.observable(data.style);
-  this.source = ko.observable(data.source);
-};
+var ViewModel = function() {
+  var self = this;
+  this.placeList = ko.observableArray([]);
+  console.log(self.placeList());
 
-let ViewModel = function() {
-  let self = this;
-  this.currentMap = ko.observable(new GoogleMap(initialMap));
+  var initPlaces = function() {
+    initialPlaces.forEach(function(item) {
+      self.placeList.push(item.name);
+    });
+    self.placeList.sort();
+  };
+
+  this.filterList = function(name) {
+    self.placeList([
+      name
+    ]);
+  };
+
+  this.reinitList = function() {
+    self.placeList([]);
+    console.log(self.placeList());
+    initPlaces();
+  };
+
+  initPlaces();
 };
 
 ko.applyBindings(new ViewModel());
+
+//console.log('app.js loads');
+//console.log($('#toggle-list-btn'));
