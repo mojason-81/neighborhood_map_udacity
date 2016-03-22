@@ -75,6 +75,9 @@ li .place-list-btn, .reinit-list-btn {
 
 /*
   Media queries to adjust proportion of screen real estate for map & sidebar.
+  Bootstrap columns didn't quite cut it.  Would have needed to hide sidebar
+  under a certain viewport width, and this is easier than trying to build
+  a collapsable, vertical nav.
 */
 
 @media screen and (max-width: 568px) {
