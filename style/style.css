@@ -1,37 +1,142 @@
 .full-window-height {
-  height: 99vh;
-  /* TODO need media query to change this
-      and make it smaller on a smaller screen
-      to leave room for a header containing
-      a button to toggle the side menu
+  /*
+    Setting this to 100vh causes a scrollbar to appear even though there isn't
+    really additional content.  Setting overflow: hidden isn't a good idea in
+    case there IS overflow content (such as the map controls) near the edge of
+    the div
   */
+  height: 99.75vh;
 }
-
 body {
-  width: 99vw;
+  /*
+    See previous comment in .full-window-height
+  */
+  width: 99.75vw;
   margin: 0;
+  padding:1px;
   padding-right: 0;
   padding-left: 0;
   background: black;
-}
-
-#map-area {
-  padding-left: 0;
-}
-
-#map {
-  height: 100%;
-}
-
-.square-corners {
-  border-radius: 0;
-}
-
-.input-group {
-  width: 100%;
 }
 
 nav {
   padding-right: 0;
   background: black;
 }
+
+li .place-list-btn, .reinit-list-btn {
+  background-color: black;
+  color: #99ccff;
+  width: 100%;
+  height: 2.5em;
+  border: none;
+  font-size: 1.25em;
+  text-align: right;
+  padding-right: 1em;
+}
+
+.boxy {
+  border-radius: 0 !important;
+  margin-right: 0;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.reinit-list-btn {
+  text-align: center;
+  border-top: 0.15em solid white;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#map-area {
+  flex-basis: 0;
+  padding-left: 0;
+  flex-grow: 1;
+  width: 100%;
+}
+
+#map {
+  height: 100%;
+}
+
+#sidebar {
+  padding-right: 0;
+  margin-left: 0;
+  flex-basis: 0;
+}
+
+
+/*
+  Media queries to adjust proportion of screen real estate for map & sidebar.
+*/
+
+@media screen and (max-width: 568px) {
+  #sidebar {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 568px) and (max-width: 768px) {
+  #sidebar {
+    flex-grow: 1;
+  }
+
+  #map-area {
+    flex-grow: 3;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1080px){
+  #sidebar {
+    flex-grow: 1;
+  }
+
+  #map-area {
+    flex-grow: 4;
+  }
+}
+
+@media screen and (min-width: 1080px) and (max-width: 1440px) {
+  #sidebar {
+    flex-grow: 1;
+  }
+
+  #map-area {
+    flex-grow: 5.5;
+  }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1600px) {
+  #sidebar {
+    flex-grow: 1;
+  }
+
+  #map-area {
+    flex-grow: 7;
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  #sidebar {
+    flex-grow: 1;
+  }
+
+  #map-area {
+    flex-grow: 8;
+  }
+
+  li .place-list-btn, .reinit-list-btn {
+    font-size: 1.5em;
+  }
+}
+
+/** {*/
+  /*border: 1px solid red;*/
+/*}*/
