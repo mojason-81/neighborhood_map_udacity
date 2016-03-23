@@ -7,12 +7,12 @@ var initialPlaces = [
   {name: 'Costco'}
 ];
 
-//var Place = function(data) {
-//  this.name = ko.observable(data);
-//};
-
-var View = function() {
-  var $toggleListBtn = $('#toggle-list-btn');
+var SideBarView = function() {
+  // TODO add something from the view here.
+  // Need to communicate with map.js somehow and tell it to hide / display
+  // markers.
+  // XXX Perhaps filterList should be here.  Hint* Look at the HTML data-binds
+  // for the foreach loop.
 };
 
 var ViewModel = function() {
@@ -20,7 +20,7 @@ var ViewModel = function() {
   this.placeList = ko.observableArray([]);
   console.log(self.placeList());
 
-  var initPlaces = function() {
+  this.initPlaces = function() {
     initialPlaces.forEach(function(item) {
       self.placeList.push(item.name);
     });
@@ -35,14 +35,10 @@ var ViewModel = function() {
 
   this.reinitList = function() {
     self.placeList([]);
-    console.log(self.placeList());
-    initPlaces();
+    self.initPlaces();
   };
 
-  initPlaces();
+  self.initPlaces();
 };
 
 ko.applyBindings(new ViewModel());
-
-//console.log('app.js loads');
-//console.log($('#toggle-list-btn'));
