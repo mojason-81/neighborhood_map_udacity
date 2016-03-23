@@ -1,10 +1,75 @@
 // Initialize Google Map
 function initGoogleMap() {
-  /*-------------------------------------------------------
-    Create custom control for displaying / hiding list view
-    Based off of Google's sample at:
-    https://developers.google.com/maps/documentation/javascript/examples/control-custom
-  -----------------------------------------------------------------------------------*/
+
+  // Create map
+  var googleMap = new google.maps.Map(document.getElementById("map"), {
+    center: {lat: 39.035, lng: -94.352},
+    zoom: 15,
+    fullscreenControl: true,
+    zoomControl: false,
+    streetViewControl: false
+  });
+
+  // Create array of objects containing all the markers' information.
+  // TODO add Wikipedia API calls and Yelp API calls for info / reviews.
+  var markers = [
+    {
+      position: new google.maps.LatLng(39.039148,-94.348433),
+      title: "Stroud's",
+      animation: google.maps.Animation.DROP,
+      map: googleMap
+    },
+    {
+      position: new google.maps.LatLng(39.035531,-94.341660),
+      title: 'Corner Cafe',
+      animation: google.maps.Animation.DROP,
+      map: googleMap
+    },
+    {
+      position: new google.maps.LatLng(39.030588,-94.357518),
+      title: 'Natural Grocers',
+      animation: google.maps.Animation.DROP,
+      map: googleMap
+    },
+    {
+      position: new google.maps.LatLng(39.034521,-94.351333),
+      title: 'Little Blue River',
+      animation: google.maps.Animation.DROP,
+      map: googleMap
+    },
+    {
+      position: new google.maps.LatLng(39.036698,-94.357593),
+      title: 'Costco',
+      animation: google.maps.Animation.DROP,
+      map: googleMap
+    }
+  ];
+
+  // Loop over markers array creating new map markers.
+  markers.forEach(function(data) {
+    var marker = new google.maps.Marker({
+      position: data.position,
+      map: data.map,
+      title: data.title,
+      animation: data.animation
+    });
+
+    // Add listener for clicks and bounce the marker when clicked.
+    marker.addListener('click', bounce);
+  });
+
+  // Bounce animation for clicking on marker courtesy of Google's examples.
+  var bounce = function() {
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+  }
+
+  //  Create custom control for displaying / hiding list view
+  //  Based off of Google's sample at:
+  //  https://developers.google.com/maps/documentation/javascript/examples/control-custom
   function ControlListView(controlDiv, map) {
 
     // Set CSS for the control border.
@@ -32,73 +97,15 @@ function initGoogleMap() {
     controlText.innerHTML = 'Toggle List';
     controlUI.appendChild(controlText);
 
-    // Make a jQuery object out of controlText and
-    // set the ID so we can later manipulate it with KO.js
-    var $controlText = $(controlText);
-    $controlText.attr('id', 'toggle-list-btn');
-    $controlText.attr('data-bind', 'click: toggleList');
-    //console.log('map.js loads');
-    //console.log($('#toggle-list-btn'));
-    // Setup the click event listeners: simply set the map to Chicago.
-    //controlUI.addEventListener('click', function(e) {
-    //  console.log(e.target);
-    //});
+    // Setup the click event listener
+    $(controlUI).click(function(e) {
+      $('#sidebar').slideToggle();
+    });
   };
-  // Declare map marker coordinates
-  var stroudsLatLong = new google.maps.LatLng(39.039148,-94.348433);
-  var cornerCafeLatLong = new google.maps.LatLng(39.035531,-94.341660);
-  var naturalGrocersLatLong = new google.maps.LatLng(39.030588,-94.357518);
-  var littleBlueLatLong = new google.maps.LatLng(39.034521,-94.351333);
-  var costcoLatLong = new google.maps.LatLng(39.036698,-94.357593);
 
-  // Create map
-  var googleMap = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 39.035, lng: -94.352},
-    zoom: 15,
-    fullscreenControl: true,
-    zoomControl: false,
-    streetViewControl: false
-  });
-
-
-  // Create map markers with associated information
-  var stroudsMarker = new google.maps.Marker({
-    position: stroudsLatLong,
-    map: googleMap,
-    title: "Stroud's"
-    // TODO use Yelp for review
-  });
-
-  var cornerCafeMarker = new google.maps.Marker({
-    position: cornerCafeLatLong,
-    map: googleMap,
-    title: "Corner Cafe"
-    // TODO use Yelp for review
-  });
-
-  var naturalGrocersMarker = new google.maps.Marker({
-    position: naturalGrocersLatLong,
-    map: googleMap,
-    title: "Natural Grocers"
-    // TODO find API for info source
-  });
-
-  var littleBlueMarker = new google.maps.Marker({
-    position: littleBlueLatLong,
-    map: googleMap,
-    title: "Little Blue River"
-    // TODO use wikipedia API for info on river
-  });
-
-  var costcoMarker = new google.maps.Marker({
-    position: costcoLatLong,
-    map: googleMap,
-    title: "Costco"
-    // TODO use wikipedia API for info on costco, maybe yelp for a review on the eatery
-  });
-
-  // Create the DIV to hold the control and call the ControlListView()
-  // constructor passing in this DIV.
+  // Create the DIV to hold the Toggle List control and call the
+  // ControlListView() constructor passing in this DIV and the map on which
+  // the control is to be created.
   var ControlListViewDiv = document.createElement('div');
   var ControlListView = new ControlListView(ControlListViewDiv, googleMap);
 
