@@ -27,7 +27,7 @@
         </div>
         <ul class="nav nav-stacked" data-bind="foreach: placeList">
           <li class="nav-justified">
-            <button type="button" class="boxy place-list-btn" data-bind="text: $data, click: $parent.filterList"></button>
+            <button type="button" class="boxy place-list-btn" data-bind="attr: {id: $data}, text: $data, click: $parent.filterList"></button>
           </li>
         </ul>
         <button type="button" class="boxy reinit-list-btn" data-bind="click: reinitList">Clear Filter</button>
