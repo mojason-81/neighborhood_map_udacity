@@ -3,7 +3,10 @@ function initGoogleMap() {
 
   // Create map
   var googleMap = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 39.035, lng: -94.352},
+    center: {
+      lat: 39.035,
+      lng: -94.352
+    },
     zoom: 15,
     fullscreenControl: true,
     zoomControl: false,
@@ -12,38 +15,37 @@ function initGoogleMap() {
 
   // Create array of objects containing all the markers' information.
   // TODO add Wikipedia API calls and Yelp API calls for info / reviews.
-  var markers = [
-    {
-      position: new google.maps.LatLng(39.039148,-94.348433),
-      title: "Stroud's",
-      animation: google.maps.Animation.DROP,
-      map: googleMap
-    },
-    {
-      position: new google.maps.LatLng(39.035531,-94.341660),
-      title: 'Corner Cafe',
-      animation: google.maps.Animation.DROP,
-      map: googleMap
-    },
-    {
-      position: new google.maps.LatLng(39.030588,-94.357518),
-      title: 'Natural Grocers',
-      animation: google.maps.Animation.DROP,
-      map: googleMap
-    },
-    {
-      position: new google.maps.LatLng(39.034521,-94.351333),
-      title: 'Little Blue River',
-      animation: google.maps.Animation.DROP,
-      map: googleMap
-    },
-    {
-      position: new google.maps.LatLng(39.036698,-94.357593),
-      title: 'Costco',
-      animation: google.maps.Animation.DROP,
-      map: googleMap
-    }
-  ];
+  var markers = [{
+    position: new google.maps.LatLng(39.039148, -94.348433),
+    title: "Stroud's",
+    animation: google.maps.Animation.DROP,
+    map: googleMap,
+    contentString: "<p>Some random factoids via API here.</p>"
+  }, {
+    position: new google.maps.LatLng(39.035531, -94.341660),
+    title: 'Corner Cafe',
+    animation: google.maps.Animation.DROP,
+    map: googleMap,
+    contentString: "<p>Some random factoids via API here.</p>"
+  }, {
+    position: new google.maps.LatLng(39.030588, -94.357518),
+    title: 'Natural Grocers',
+    animation: google.maps.Animation.DROP,
+    map: googleMap,
+    contentString: "<p>Some random factoids via API here.</p>"
+  }, {
+    position: new google.maps.LatLng(39.034521, -94.351333),
+    title: 'Little Blue River',
+    animation: google.maps.Animation.DROP,
+    map: googleMap,
+    contentString: "<p>Some random factoids via API here.</p>"
+  }, {
+    position: new google.maps.LatLng(39.036698, -94.357593),
+    title: 'Costco',
+    animation: google.maps.Animation.DROP,
+    map: googleMap,
+    contentString: "<p>Some random factoids via API here.</p>"
+  }];
 
   // Loop over markers array creating new map markers.
   markers.forEach(function(data) {
@@ -54,18 +56,20 @@ function initGoogleMap() {
       animation: data.animation
     });
 
-    // Add listener for clicks and bounce the marker when clicked.
-    marker.addListener('click', bounce);
-  });
+    // Add listener for clicks and toggle bouncing marker when clicked.
+    marker.addListener('click', function() {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        infoWindow.open(googleMap, marker);
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+    });
 
-  // Bounce animation for clicking on marker courtesy of Google's examples.
-  var bounce = function() {
-    if (marker.getAnimation() !== null) {
-      marker.setAnimation(null);
-    } else {
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-    }
-  }
+    var infoWindow = new google.maps.InfoWindow({
+      content: data.contentString
+    });
+  });
 
   //  Create custom control for displaying / hiding list view
   //  Based off of Google's sample at:
