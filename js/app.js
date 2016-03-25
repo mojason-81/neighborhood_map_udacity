@@ -8,7 +8,7 @@ var places = ko.observableArray([
     title: "Stroud's",
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'strouds',
-    //marker: ''
+    mapMarker: ''
   },
   {
     lat: 39.035531,
@@ -16,7 +16,7 @@ var places = ko.observableArray([
     title: 'Corner Cafe',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'corner-cafe',
-    //marker: ''
+    mapMarker: ''
   },
   {
     lat: 39.030588,
@@ -24,7 +24,7 @@ var places = ko.observableArray([
     title: 'Natural Grocers',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'natural-grocers',
-    //marker: ''
+    mapMarker: ''
   },
   {
     lat: 39.034521,
@@ -32,7 +32,7 @@ var places = ko.observableArray([
     title: 'Little Blue River',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'little-blue-river',
-    //marker: ''
+    mapMarker: ''
   },
   {
     lat: 39.036698,
@@ -40,7 +40,7 @@ var places = ko.observableArray([
     title: 'Costco',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'costco',
-    //mapMarker: ''
+    mapMarker: ''
   }
 ]);
 // Initialize Google Map
@@ -70,7 +70,7 @@ function initGoogleMap() {
 
     // Set the marker we just created as a property on the list
     // we just looped over so we can have it available to KO.
-    marker.mapMarker = marker;
+    marker.mapMarker = marker;// FIXME this happens after the list is built.
 
     // Add listener for clicks and toggle bouncing marker when clicked.
     marker.addListener('click', function() {
@@ -152,13 +152,19 @@ var ViewModel = function() {
 
   this.placeList = ko.observableArray([]);
 
+  // FIXME places is an observableArray.  We need to monitor changes to it,
+  // and call initPlaces on changes since the markers are added to it after
+  // initPlaces() runs.
   this.initPlaces = function() {
     places().forEach(function(item) {
-      self.placeList.push(item.title);
+      self.placeList.push(item);
     });
     self.placeList.sort();
+    console.log(self.placeList());
   };
 
+  // may have to refactor this.  data (name) and the event (dom event)
+  // associated with a dom object.  need the js object.
   this.filterList = function(name, event) {
     self.placeList([
       name
@@ -169,6 +175,7 @@ var ViewModel = function() {
   this.reinitList = function() {
     self.placeList([]);
     self.initPlaces();
+    console.log(self.placeList());
   };
 
   self.initPlaces();
