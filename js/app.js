@@ -76,7 +76,6 @@ function initGoogleMap() {
         infoWindow.open(googleMap, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
         $('#' + marker.title).click();
-        ViewModel.filterList(marker.title);
       }
     });
 
