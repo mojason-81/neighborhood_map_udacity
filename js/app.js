@@ -8,7 +8,7 @@ var places = ko.observableArray([
     title: "Stroud's",
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'strouds',
-    marker: ''
+    //marker: ''
   },
   {
     lat: 39.035531,
@@ -16,7 +16,7 @@ var places = ko.observableArray([
     title: 'Corner Cafe',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'corner-cafe',
-    marker: ''
+    //marker: ''
   },
   {
     lat: 39.030588,
@@ -24,7 +24,7 @@ var places = ko.observableArray([
     title: 'Natural Grocers',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'natural-grocers',
-    marker: ''
+    //marker: ''
   },
   {
     lat: 39.034521,
@@ -32,7 +32,7 @@ var places = ko.observableArray([
     title: 'Little Blue River',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'little-blue-river',
-    marker: ''
+    //marker: ''
   },
   {
     lat: 39.036698,
@@ -40,7 +40,7 @@ var places = ko.observableArray([
     title: 'Costco',
     contentString: "<p>Some random factoids via API here.</p>",
     listItem: 'costco',
-    marker: ''
+    //mapMarker: ''
   }
 ]);
 // Initialize Google Map
@@ -65,8 +65,12 @@ function initGoogleMap() {
       position: mkPosition,
       map: googleMap,
       title: data.title,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
     });
+
+    // Set the marker we just created as a property on the list
+    // we just looped over so we can have it available to KO.
+    marker.mapMarker = marker;
 
     // Add listener for clicks and toggle bouncing marker when clicked.
     marker.addListener('click', function() {
@@ -155,10 +159,11 @@ var ViewModel = function() {
     self.placeList.sort();
   };
 
-  this.filterList = function(name) {
+  this.filterList = function(name, event) {
     self.placeList([
       name
     ]);
+    console.log(event.target);
   };
 
   this.reinitList = function() {
