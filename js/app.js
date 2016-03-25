@@ -72,9 +72,14 @@ function initGoogleMap() {
     marker.addListener('click', function() {
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
+
+        // Grab clear list button anc call it's click event
+        $('#clear-list-btn').click();
+        infoWindow.close(googleMap, marker);
       } else {
         infoWindow.open(googleMap, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        // Grab list item via jQuery and call it's click event
         $('#' + marker.title).click();
       }
     });
