@@ -6,31 +6,41 @@ var places = ko.observableArray([
     lat: 39.039148,
     lng: -94.348433,
     title: "Stroud's",
-    contentString: "<p>Some random factoids via API here.</p>"
+    contentString: "<p>Some random factoids via API here.</p>",
+    listItem: 'strouds',
+    marker: ''
   },
   {
     lat: 39.035531,
     lng: -94.341660,
     title: 'Corner Cafe',
-    contentString: "<p>Some random factoids via API here.</p>"
+    contentString: "<p>Some random factoids via API here.</p>",
+    listItem: 'corner-cafe',
+    marker: ''
   },
   {
     lat: 39.030588,
     lng: -94.357518,
     title: 'Natural Grocers',
-    contentString: "<p>Some random factoids via API here.</p>"
+    contentString: "<p>Some random factoids via API here.</p>",
+    listItem: 'natural-grocers',
+    marker: ''
   },
   {
     lat: 39.034521,
     lng: -94.351333,
     title: 'Little Blue River',
-    contentString: "<p>Some random factoids via API here.</p>"
+    contentString: "<p>Some random factoids via API here.</p>",
+    listItem: 'little-blue-river',
+    marker: ''
   },
   {
     lat: 39.036698,
     lng: -94.357593,
     title: 'Costco',
-    contentString: "<p>Some random factoids via API here.</p>"
+    contentString: "<p>Some random factoids via API here.</p>",
+    listItem: 'costco',
+    marker: ''
   }
 ]);
 // Initialize Google Map
@@ -65,6 +75,7 @@ function initGoogleMap() {
       } else {
         infoWindow.open(googleMap, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        $('#' + marker.title).click();
         ViewModel.filterList(marker.title);
       }
     });
@@ -130,7 +141,7 @@ var SideBarView = function() {
 
 var ViewModel = function() {
   var self = this;
-  
+
   this.placeList = ko.observableArray([]);
 
   this.initPlaces = function() {
