@@ -7,7 +7,8 @@ var places = ko.observableArray([
     lng: -94.348433,
     title: "Stroud's",
     contentString: "<p>Some random factoids via API here.</p>",
-    listItem: 'strouds',
+    id: 'strouds',
+    listItem: '',
     mapMarker: ''
   },
   {
@@ -15,7 +16,8 @@ var places = ko.observableArray([
     lng: -94.341660,
     title: 'Corner Cafe',
     contentString: "<p>Some random factoids via API here.</p>",
-    listItem: 'corner-cafe',
+    id: 'corner-cafe',
+    listItem: '',
     mapMarker: ''
   },
   {
@@ -23,7 +25,8 @@ var places = ko.observableArray([
     lng: -94.357518,
     title: 'Natural Grocers',
     contentString: "<p>Some random factoids via API here.</p>",
-    listItem: 'natural-grocers',
+    id: 'natural-grocers',
+    listItem: '',
     mapMarker: ''
   },
   {
@@ -31,7 +34,8 @@ var places = ko.observableArray([
     lng: -94.351333,
     title: 'Little Blue River',
     contentString: "<p>Some random factoids via API here.</p>",
-    listItem: 'little-blue-river',
+    id: 'little-blue-river',
+    listItem: '',
     mapMarker: ''
   },
   {
@@ -39,7 +43,8 @@ var places = ko.observableArray([
     lng: -94.357593,
     title: 'Costco',
     contentString: "<p>Some random factoids via API here.</p>",
-    listItem: 'costco',
+    id: 'costco',
+    listItem: '',
     mapMarker: ''
   }
 ]);
@@ -67,24 +72,28 @@ function initGoogleMap() {
       title: data.title,
       animation: google.maps.Animation.DROP,
     });
+    var clickable = $('#' + data.id)
 
     // Set the marker we just created as a property on the list
     // we just looped over so we can have it available to KO.
-    marker.mapMarker = marker;// FIXME this happens after the list is built.
+    data.mapMarker = marker;// FIXME this happens after the list is built.
+    data.listItem = clickable;
 
     // Add listener for clicks and toggle bouncing marker when clicked.
-    marker.addListener('click', function() {
+    marker.addListener('click', function(event) {
+      // console.log(event.latLng.lat());
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
 
         // Grab clear list button anc call it's click event
-        $('#clear-list-btn').click();
+        $('#clear-list-btn').trigger('click');
         infoWindow.close(googleMap, marker);
       } else {
         infoWindow.open(googleMap, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
+
         // Grab list item via jQuery and call it's click event
-        $('#' + marker.title).click();
+        clickable.trigger('click');
       }
     });
 
@@ -139,15 +148,9 @@ function initGoogleMap() {
   googleMap.controls[google.maps.ControlPosition.LEFT].push(ControlListViewDiv);
 };
 
-var SideBarView = function() {
-  // TODO add something from the view here.
-  // Need to communicate with map.js somehow and tell it to hide / display
-  // markers.
-  // XXX Perhaps filterList should be here.  Hint* Look at the HTML data-binds
-  // for the foreach loop.
-};
 
-var ViewModel = function() {
+
+function ViewModel() {
   var self = this;
 
   this.placeList = ko.observableArray([]);
@@ -160,22 +163,28 @@ var ViewModel = function() {
       self.placeList.push(item);
     });
     self.placeList.sort();
-    console.log(self.placeList());
   };
 
   // may have to refactor this.  data (name) and the event (dom event)
   // associated with a dom object.  need the js object.
   this.filterList = function(name, event) {
-    self.placeList([
-      name
-    ]);
-    console.log(event.target);
+    // if this one is hidden, show it and hide everything else
+    places().forEach(function(item) {
+      if (event.target.id != item.id) {
+        item.listItem.hide();
+        // item.mapMarker.trigger('click');
+        item.mapMarker.set('animation', null);
+      }
+      else {
+        item.listItem.show();
+      }
+    });
   };
 
-  this.reinitList = function() {
-    self.placeList([]);
-    self.initPlaces();
-    console.log(self.placeList());
+  this.clearFilter = function() {
+    places().forEach(function(item) {
+      item.listItem.show();
+    });
   };
 
   self.initPlaces();

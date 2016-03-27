@@ -27,10 +27,10 @@
         </div>
         <ul class="nav nav-stacked" data-bind="foreach: placeList">
           <li class="nav-justified">
-            <button type="button" class="boxy place-list-btn" data-bind="attr: {id: $data.title}, text: $data.title, click: $parent.filterList"></button>
+            <button type="button" class="boxy place-list-btn" data-bind="attr: {id: $data.id}, text: $data.title, click: $parent.filterList"></button>
           </li>
         </ul>
-        <button type="button" class="boxy reinit-list-btn" id="clear-list-btn" data-bind="click: reinitList">Clear Filter</button>
+        <button type="button" class="boxy reinit-list-btn" id="clear-list-btn" data-bind="click: clearFilter">Clear Filter</button>
       </div>
     </section>
 
