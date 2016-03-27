@@ -9,7 +9,9 @@ var places = ko.observableArray([
     contentString: "<p>Some random factoids via API here.</p>",
     id: 'strouds',
     listItem: '',
-    mapMarker: ''
+    mapMarker: '',
+    closeInfoWindow: '',
+    openInfoWindow: ''
   },
   {
     lat: 39.035531,
@@ -18,7 +20,9 @@ var places = ko.observableArray([
     contentString: "<p>Some random factoids via API here.</p>",
     id: 'corner-cafe',
     listItem: '',
-    mapMarker: ''
+    mapMarker: '',
+    closeInfoWindow: '',
+    openInfoWindow: ''
   },
   {
     lat: 39.030588,
@@ -27,7 +31,9 @@ var places = ko.observableArray([
     contentString: "<p>Some random factoids via API here.</p>",
     id: 'natural-grocers',
     listItem: '',
-    mapMarker: ''
+    mapMarker: '',
+    closeInfoWindow: '',
+    openInfoWindow: ''
   },
   {
     lat: 39.034521,
@@ -36,7 +42,9 @@ var places = ko.observableArray([
     contentString: "<p>Some random factoids via API here.</p>",
     id: 'little-blue-river',
     listItem: '',
-    mapMarker: ''
+    mapMarker: '',
+    closeInfoWindow: '',
+    openInfoWindow: ''
   },
   {
     lat: 39.036698,
@@ -45,9 +53,12 @@ var places = ko.observableArray([
     contentString: "<p>Some random factoids via API here.</p>",
     id: 'costco',
     listItem: '',
-    mapMarker: ''
+    mapMarker: '',
+    closeInfoWindow: '',
+    openInfoWindow: ''
   }
 ]);
+
 // Initialize Google Map
 function initGoogleMap() {
 
@@ -100,6 +111,14 @@ function initGoogleMap() {
     var infoWindow = new google.maps.InfoWindow({
       content: data.contentString
     });
+
+    data.closeInfoWindow = function() {
+      infoWindow.close(googleMap, marker);
+    }.bind(this);
+
+    data.openInfoWindow = function() {
+      infoWindow.open(googleMap, marker);
+    }.bind(this);
   });
 
   //  Create custom control for displaying / hiding list view
@@ -148,8 +167,6 @@ function initGoogleMap() {
   googleMap.controls[google.maps.ControlPosition.LEFT].push(ControlListViewDiv);
 };
 
-
-
 function ViewModel() {
   var self = this;
 
@@ -158,15 +175,11 @@ function ViewModel() {
   // FIXME places is an observableArray.  We need to monitor changes to it,
   // and call initPlaces on changes since the markers are added to it after
   // initPlaces() runs.
-  this.initPlaces = function() {
-    places().forEach(function(item) {
-      self.placeList.push(item);
-    });
-    self.placeList.sort();
-  };
+  places().forEach(function(item) {
+    self.placeList.push(item);
+  });
+  self.placeList.sort();
 
-  // may have to refactor this.  data (name) and the event (dom event)
-  // associated with a dom object.  need the js object.
   this.filterList = function(name, event) {
     // if this one is hidden, show it and hide everything else
     places().forEach(function(item) {
@@ -174,8 +187,11 @@ function ViewModel() {
         item.listItem.hide();
         // item.mapMarker.trigger('click');
         item.mapMarker.set('animation', null);
+        item.closeInfoWindow();
       }
       else {
+        item.openInfoWindow();
+        item.mapMarker.set('animation', 1);
         item.listItem.show();
       }
     });
@@ -184,10 +200,10 @@ function ViewModel() {
   this.clearFilter = function() {
     places().forEach(function(item) {
       item.listItem.show();
+      item.mapMarker.set('animation', null);
+      item.closeInfoWindow();
     });
   };
-
-  self.initPlaces();
 };
 
 ko.applyBindings(new ViewModel());
