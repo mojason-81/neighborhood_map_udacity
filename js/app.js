@@ -1,4 +1,21 @@
 'use strict';
+var littleBlueAjax = $.ajax({
+  url: 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Cextracts%7Clinks&titles=Little_Blue_River_(Missouri)&redirects=1&callback=wikiCallback&utf8=1&rvprop=content&rvparse=1&exsectionformat=plain',
+  //url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=little%20blue%20river%20MO&callback=wikiCallback',
+  dataType: 'jsonp',
+  jsonp: 'callback',
+  headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
+  success: function(response){
+    var thing = response.query.pages;
+    for (var key in thing) {
+      if (thing[key]['extract']){
+        var littleBlueString = thing[key]['extract'];
+        return littleBlueString.toString();
+      }
+    }
+  }
+});
+
 // Create array of objects containing all the markers' information.
 // TODO add Wikipedia API calls and Yelp API calls for info / reviews.
 var places = ko.observableArray([
@@ -39,7 +56,7 @@ var places = ko.observableArray([
     lat: 39.034521,
     lng: -94.351333,
     title: 'Little Blue River',
-    contentString: "<p>Some random factoids via API here.</p>",
+    contentString: littleBlueAjax,
     id: 'little-blue-river',
     listItem: '',
     mapMarker: '',
