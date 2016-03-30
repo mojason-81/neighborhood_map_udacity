@@ -1,20 +1,4 @@
 'use strict';
-var littleBlueAjax = $.ajax({
-  url: 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Cextracts%7Clinks&titles=Little_Blue_River_(Missouri)&redirects=1&callback=wikiCallback&utf8=1&rvprop=content&rvparse=1&exsectionformat=plain',
-  //url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=little%20blue%20river%20MO&callback=wikiCallback',
-  dataType: 'jsonp',
-  jsonp: 'callback',
-  headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
-  success: function(response){
-    var thing = response.query.pages;
-    for (var key in thing) {
-      if (thing[key]['extract']){
-        var littleBlueString = thing[key]['extract'];
-        return littleBlueString.toString();
-      }
-    }
-  }
-});
 
 // Create array of objects containing all the markers' information.
 // TODO add Wikipedia API calls and Yelp API calls for info / reviews.
@@ -23,7 +7,6 @@ var places = ko.observableArray([
     lat: 39.039148,
     lng: -94.348433,
     title: "Stroud's",
-    contentString: "<p>Some random factoids via API here.</p>",
     id: 'strouds',
     listItem: '',
     mapMarker: '',
@@ -34,7 +17,6 @@ var places = ko.observableArray([
     lat: 39.035531,
     lng: -94.341660,
     title: 'Corner Cafe',
-    contentString: "<p>Some random factoids via API here.</p>",
     id: 'corner-cafe',
     listItem: '',
     mapMarker: '',
@@ -45,7 +27,7 @@ var places = ko.observableArray([
     lat: 39.030588,
     lng: -94.357518,
     title: 'Natural Grocers',
-    contentString: "<p>Some random factoids via API here.</p>",
+    infoWindow: '',
     id: 'natural-grocers',
     listItem: '',
     mapMarker: '',
@@ -56,7 +38,6 @@ var places = ko.observableArray([
     lat: 39.034521,
     lng: -94.351333,
     title: 'Little Blue River',
-    contentString: littleBlueAjax,
     id: 'little-blue-river',
     listItem: '',
     mapMarker: '',
@@ -67,7 +48,6 @@ var places = ko.observableArray([
     lat: 39.036698,
     lng: -94.357593,
     title: 'Costco',
-    contentString: "<p>Some random factoids via API here.</p>",
     id: 'costco',
     listItem: '',
     mapMarker: '',
@@ -100,7 +80,80 @@ function initGoogleMap() {
       title: data.title,
       animation: google.maps.Animation.DROP,
     });
-    var clickable = $('#' + data.id)
+
+    var clickable = $('#' + data.id);
+    var infoWindow = new google.maps.InfoWindow({
+      content: data.contentString
+    });
+
+    if (data.title === "Stroud's") {
+      console.log(data.title);
+
+      // TODO research Yelp API.  After cursory overview, it doesn't appear
+      // There is AJAX integration.
+      var linkString = "<a href='http://independence.stroudsrestaurant.com/' target=_blank>Click here for stroudsrestaurant.com</a>";
+      infoWindow.setContent(linkString);
+    }
+
+    if (data.title === 'Corner Cafe') {
+      console.log(data.title);
+
+      // TODO research Yelp API.  After cursory overview, it doesn't appear
+      // There is AJAX integration.
+      var linkString = "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a>";
+      infoWindow.setContent(linkString);
+    }
+    if (data.title === 'Natural Grocers') {
+      $.ajax({
+        url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=vitamin%20cottage%20natural%20grocers&callback=wikiCallback',
+        dataType: 'jsonp',
+        jsonp: 'callback',
+        headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
+        success: function(response) {
+          var linkString = '<p>Want to learn a little about Natural Grocers?</p>';
+          response[3].forEach(function(entry) {
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+          });
+          infoWindow.setContent(linkString);
+        }
+      });
+    }
+
+    if (data.title === 'Little Blue River') {
+      $.ajax({
+        // The commented out url will return data that can be used to get the actual wiki article content.
+        // However, without using some fancy regex to parse only the bits you want from the 'extract', you
+        // end up creating a very large infowindow when you stick that content into it.
+        //url: 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Cextracts%7Clinks&titles=Little_Blue_River_(Missouri)&redirects=1&callback=wikiCallback&utf8=1&rvprop=content&rvparse=1&exsectionformat=plain',
+        url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=little%20blue%20river%20MO&callback=wikiCallback',
+        dataType: 'jsonp',
+        jsonp: 'callback',
+        headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
+        success: function(response) {
+          var linkString = '<p>Want to learn a little about Little Blue River?</p>';
+          response[3].forEach(function(entry) {
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+          });
+          infoWindow.setContent(linkString);
+        }
+      });
+    }
+
+    if (data.title === 'Costco') {
+      $.ajax({
+        url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=costco&callback=wikiCallback',
+        dataType: 'jsonp',
+        jsonp: 'callback',
+        headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
+        success: function(response) {
+          var linkString = '<p>Want to learn a little about Costco?</p>';
+          response[3].forEach(function(entry) {
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+          });
+          infoWindow.setContent(linkString);
+        }
+      });
+    }
 
     // Set the marker we just created as a property on the list
     // we just looped over so we can have it available to KO.
@@ -123,10 +176,6 @@ function initGoogleMap() {
         // Grab list item via jQuery and call it's click event
         clickable.trigger('click');
       }
-    });
-
-    var infoWindow = new google.maps.InfoWindow({
-      content: data.contentString
     });
 
     data.closeInfoWindow = function() {
