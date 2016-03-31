@@ -1,7 +1,5 @@
-'use strict';
-
-// Create array of objects containing all the markers' information.
-// TODO add Wikipedia API calls and Yelp API calls for info / reviews.
+// Create array of objects containing information for the markers
+// and list items / buttons.
 var places = ko.observableArray([
   {
     lat: 39.039148,
@@ -81,24 +79,28 @@ function initGoogleMap() {
       animation: google.maps.Animation.DROP,
     });
 
-    var clickable = $('#' + data.id);
+    var listButton = $('#' + data.id);
     var infoWindow = new google.maps.InfoWindow({
       content: data.contentString
     });
 
     if (data.title === "Stroud's") {
-
-      // TODO research Yelp API.  After cursory overview, it doesn't appear
-      // There is AJAX integration.
-      var linkString = "<a href='http://independence.stroudsrestaurant.com/' target=_blank>Click here for stroudsrestaurant.com</a>";
+      var linkString = "<h5>Stroud's Restaurant</h5>" +
+      "<p>The year was 1933. Prohibition had just been repealed, " +
+      "we were between two World Wars and Stroud’s Restaurant was built.<br>" +
+      "--Quoted from Stroud's website.</p>" +
+      "<a href='http://independence.stroudsrestaurant.com/' target=_blank>Click here for stroudsrestaurant.com</a>";
       infoWindow.setContent(linkString);
     }
 
     if (data.title === 'Corner Cafe') {
-
-      // TODO research Yelp API.  After cursory overview, it doesn't appear
-      // There is AJAX integration.
-      var linkString = "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a>";
+      var linkString = "<h5>Corner Cafe</h5>" +
+      "<p>There had always been a small restaurant at the ‘Corner’ in Riverside Missouri, " +
+      "but before 1983 it had changed names and hands several times. Many of the locals " +
+      "wanted to see a return to the old style cafe that had existed there years before and " +
+      "was an icon of its time (Reese’s Cafe).<br>" +
+      "--Quoted from Corner Cafe's website.</p><br>" +
+      "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a>";
       infoWindow.setContent(linkString);
     }
 
@@ -109,7 +111,15 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = '<p>Want to learn a little about Natural Grocers?</p>';
+          var linkString = "<h5>Natural Grocers</h5>" +
+                           "<p>Our company has been in business since 1955. We are " +
+                           "a company that is built on great intent and integrity. " +
+                           "From the beginning we established a foundation we refer " +
+                           "to as our Five Founding Principles. <br>" +
+                           "--Quoted from Natural Grocers website</p>" +
+                           "<p>Want to learn a little about Natural Grocers?</p>" +
+                           "<a href='https://www.naturalgrocers.com/about/our-five-founding-principles/' target=_blank>https://www.naturalgrocers.com/about/our-five-founding-principles/</a><br>" +
+                           "<a href='https://www.naturalgrocers.com/about/the-natural-grocers-story/' target=_blank>https://www.naturalgrocers.com/about/the-natural-grocers-story/</a><br>";
           response[3].forEach(function(entry) {
             linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
           });
@@ -132,9 +142,13 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = '<p>Want to learn a little about Little Blue River?</p>';
+          var linkString = "<h5>Battle of Little Blue River, American Civil War</h5>" +
+                           "<p>The Battle of Little Blue River was a battle of the American Civil War," +
+                           "occurring on October 21, 1864 in Jackson County, Missouri during Price's Raid. " +
+                           "</p><p>Learn more by clicking on the links below.</p>" +
+                           "<a href='https://www.nps.gov/abpp/battles/mo024.htm' target=_blank>https://www.nps.gov/abpp/battles/mo024.htm</a><br>"
           response[3].forEach(function(entry) {
-            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a>'
           });
           infoWindow.setContent(linkString);
         },
@@ -151,7 +165,9 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = '<p>Want to learn a little about Costco?</p>';
+          var linkString = "<h5>Costco</h5>" +
+                           "<p>If you don't know what Costco is, click one of these links</p>" +
+                           "<a href='http://www.costco.com'>www.costco.com</a><br>";
           response[3].forEach(function(entry) {
             linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
           });
@@ -164,11 +180,11 @@ function initGoogleMap() {
     }
 
     // Set the marker we just created as a property on the list
-    // we just looped over so we can have it available to KO.
-    data.mapMarker = marker;// FIXME this happens after the list is built.
-    data.listItem = clickable;
+    // we just looped over so we can have it available for later.
+    data.mapMarker = marker;
+    data.listItem = listButton;
 
-    // Add listener for clicks and toggle bouncing marker when clicked.
+    // Add listener for clicks to the marker we just created.
     marker.addListener('click', function(event) {
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
@@ -180,10 +196,8 @@ function initGoogleMap() {
         infoWindow.open(googleMap, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
 
-        // Grab list item via jQuery and call it's click event
-        // clickable.trigger('click');
         places().forEach(function(place) {
-          if (clickable.text() === place.title) {
+          if (listButton.text() === place.title) {
             place.listItem.show();
             place.openInfoWindow();
           } else {
@@ -262,10 +276,11 @@ function ViewModel() {
   var self = this;
   this.placeList = ko.observableArray([]);
   this.placeFilter = ko.observable();
+  $(document).ready($('#place-filter-input').focus());
 
   this.filterPlaces = function() {
     places().forEach(function(place) {
-      if (self.placeFilter() != place.title) {
+      if (self.placeFilter().toLowerCase() != place.title.toLowerCase()) {
         place.mapMarker.setVisible(false);
         place.listItem.hide();
       } else {
@@ -276,10 +291,6 @@ function ViewModel() {
     });
   };
 
-
-  // FIXME places is an observableArray.  We need to monitor changes to it,
-  // and call initPlaces on changes since the markers are added to it after
-  // initPlaces() runs.
   places().forEach(function(place) {
     self.placeList.push(place);
   });
