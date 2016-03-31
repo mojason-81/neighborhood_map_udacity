@@ -8,20 +8,20 @@ var places = ko.observableArray([
     lng: -94.348433,
     title: "Stroud's",
     id: 'strouds',
-    listItem: '',
-    mapMarker: '',
-    closeInfoWindow: '',
-    openInfoWindow: ''
+    listItem: '',/*Later set as an object*/
+    mapMarker: '',/*Later set as an object*/
+    closeInfoWindow: ''/*Later set as a function*/,
+    openInfoWindow: ''/*Later set as a function*/
   },
   {
     lat: 39.035531,
     lng: -94.341660,
     title: 'Corner Cafe',
     id: 'corner-cafe',
-    listItem: '',
-    mapMarker: '',
-    closeInfoWindow: '',
-    openInfoWindow: ''
+    listItem: '',/*Later set as an object*/
+    mapMarker: '',/*Later set as an object*/
+    closeInfoWindow: ''/*Later set as a function*/,
+    openInfoWindow: ''/*Later set as a function*/
   },
   {
     lat: 39.030588,
@@ -29,30 +29,30 @@ var places = ko.observableArray([
     title: 'Natural Grocers',
     infoWindow: '',
     id: 'natural-grocers',
-    listItem: '',
-    mapMarker: '',
-    closeInfoWindow: '',
-    openInfoWindow: ''
+    listItem: '',/*Later set as an object*/
+    mapMarker: '',/*Later set as an object*/
+    closeInfoWindow: ''/*Later set as a function*/,
+    openInfoWindow: ''/*Later set as a function*/
   },
   {
     lat: 39.034521,
     lng: -94.351333,
     title: 'Little Blue River',
     id: 'little-blue-river',
-    listItem: '',
-    mapMarker: '',
-    closeInfoWindow: '',
-    openInfoWindow: ''
+    listItem: '',/*Later set as an object*/
+    mapMarker: '',/*Later set as an object*/
+    closeInfoWindow: ''/*Later set as a function*/,
+    openInfoWindow: ''/*Later set as a function*/
   },
   {
     lat: 39.036698,
     lng: -94.357593,
     title: 'Costco',
     id: 'costco',
-    listItem: '',
-    mapMarker: '',
-    closeInfoWindow: '',
-    openInfoWindow: ''
+    listItem: '',/*Later set as an object*/
+    mapMarker: '',/*Later set as an object*/
+    closeInfoWindow: ''/*Later set as a function*/,
+    openInfoWindow: ''/*Later set as a function*/
   }
 ]);
 
@@ -87,7 +87,6 @@ function initGoogleMap() {
     });
 
     if (data.title === "Stroud's") {
-      console.log(data.title);
 
       // TODO research Yelp API.  After cursory overview, it doesn't appear
       // There is AJAX integration.
@@ -96,13 +95,13 @@ function initGoogleMap() {
     }
 
     if (data.title === 'Corner Cafe') {
-      console.log(data.title);
 
       // TODO research Yelp API.  After cursory overview, it doesn't appear
       // There is AJAX integration.
       var linkString = "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a>";
       infoWindow.setContent(linkString);
     }
+
     if (data.title === 'Natural Grocers') {
       $.ajax({
         url: 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=vitamin%20cottage%20natural%20grocers&callback=wikiCallback',
@@ -115,6 +114,9 @@ function initGoogleMap() {
             linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
           });
           infoWindow.setContent(linkString);
+        },
+        fail: function() {
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
         }
       });
     }
@@ -135,6 +137,9 @@ function initGoogleMap() {
             linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
           });
           infoWindow.setContent(linkString);
+        },
+        fail: function() {
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
         }
       });
     }
@@ -151,6 +156,9 @@ function initGoogleMap() {
             linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
           });
           infoWindow.setContent(linkString);
+        },
+        fail: function() {
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
         }
       });
     }
@@ -162,7 +170,6 @@ function initGoogleMap() {
 
     // Add listener for clicks and toggle bouncing marker when clicked.
     marker.addListener('click', function(event) {
-      // console.log(event.latLng.lat());
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
 
@@ -174,9 +181,27 @@ function initGoogleMap() {
         marker.setAnimation(google.maps.Animation.BOUNCE);
 
         // Grab list item via jQuery and call it's click event
-        clickable.trigger('click');
+        // clickable.trigger('click');
+        places().forEach(function(place) {
+          if (clickable.text() === place.title) {
+            place.listItem.show();
+            place.openInfoWindow();
+          } else {
+            place.listItem.hide();
+            place.closeInfoWindow();
+            place.mapMarker.setAnimation(null);
+          }
+        });
       }
     });
+
+    googleMap.addListener('click', function() {
+      places().forEach(function(place) {
+        place.listItem.show();
+        place.closeInfoWindow();
+        place.mapMarker.setAnimation(null);
+      });
+    })
 
     data.closeInfoWindow = function() {
       infoWindow.close(googleMap, marker);
