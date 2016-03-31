@@ -20,9 +20,9 @@
     <section class="sidebar" id="sidebar">
       <div class="nav list-group">
         <div class="input-group">
-          <input type="text" class="form-control boxy" placeholder="Filter" name="srch-term">
+          <input type="text" class="form-control boxy" placeholder="Filter" data-bind="textInput: placeFilter" name="srch-term"/>
           <div class="input-group-btn">
-            <button class="btn btn-default boxy"><i class="glyphicon glyphicon-filter"></i></button>
+            <button class="btn btn-default boxy" data-bind="click: filterPlaces"><i class="glyphicon glyphicon-filter"></i></button>
           </div>
         </div>
         <ul class="nav nav-stacked" data-bind="foreach: placeList">

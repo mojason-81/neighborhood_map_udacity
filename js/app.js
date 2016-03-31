@@ -260,39 +260,53 @@ function initGoogleMap() {
 
 function ViewModel() {
   var self = this;
-
   this.placeList = ko.observableArray([]);
+  this.placeFilter = ko.observable();
+
+  this.filterPlaces = function() {
+    places().forEach(function(place) {
+      if (self.placeFilter() != place.title) {
+        place.mapMarker.setVisible(false);
+        place.listItem.hide();
+      } else {
+        place.mapMarker.setVisible(true);
+        place.listItem.show();
+        place.openInfoWindow();
+      }
+    });
+  };
+
 
   // FIXME places is an observableArray.  We need to monitor changes to it,
   // and call initPlaces on changes since the markers are added to it after
   // initPlaces() runs.
-  places().forEach(function(item) {
-    self.placeList.push(item);
+  places().forEach(function(place) {
+    self.placeList.push(place);
   });
-  self.placeList.sort();
 
   this.filterList = function(name, event) {
     // if this one is hidden, show it and hide everything else
-    places().forEach(function(item) {
-      if (event.target.id != item.id) {
-        item.listItem.hide();
+    places().forEach(function(place) {
+      if (event.target.id != place.id) {
+        place.listItem.hide();
         // item.mapMarker.trigger('click');
-        item.mapMarker.set('animation', null);
-        item.closeInfoWindow();
+        place.mapMarker.set('animation', null);
+        place.closeInfoWindow();
       }
       else {
-        item.openInfoWindow();
-        item.mapMarker.set('animation', 1);
-        item.listItem.show();
+        place.openInfoWindow();
+        place.mapMarker.set('animation', 1);
+        place.listItem.show();
       }
     });
   };
 
   this.clearFilter = function() {
-    places().forEach(function(item) {
-      item.listItem.show();
-      item.mapMarker.set('animation', null);
-      item.closeInfoWindow();
+    places().forEach(function(place) {
+      place.listItem.show();
+      place.mapMarker.setVisible(true);
+      place.mapMarker.set('animation', null);
+      place.closeInfoWindow();
     });
   };
 };
