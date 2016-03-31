@@ -165,7 +165,7 @@ function initGoogleMap() {
     // Set the marker we just created as a property on the list
     // we just looped over so we can have it available for later.
     data.mapMarker = marker;
-    data.listItem = listButton;
+    data.$listItem = listButton;
 
     // Add listener for clicks to the marker we just created.
     marker.addListener('click', function(event) {
@@ -181,7 +181,7 @@ function initGoogleMap() {
 
         places().forEach(function(place) {
           if (listButton.text() === place.title) {
-            place.listItem.show();
+            place.$listItem.show();
             place.openInfoWindow();
           } else {
             place.closeInfoWindow();
@@ -193,7 +193,7 @@ function initGoogleMap() {
 
     googleMap.addListener('click', function() {
       places().forEach(function(place) {
-        place.listItem.show();
+        place.$listItem.show();
         place.closeInfoWindow();
         place.mapMarker.setAnimation(null);
       });
@@ -264,10 +264,10 @@ function ViewModel() {
     places().forEach(function(place) {
       if (self.placeFilter().toLowerCase() != place.title.toLowerCase()) {
         place.mapMarker.setVisible(false);
-        place.listItem.hide();
+        place.$listItem.hide();
       } else {
         place.mapMarker.setVisible(true);
-        place.listItem.show();
+        place.$listItem.show();
         place.openInfoWindow();
       }
     });
@@ -293,7 +293,7 @@ function ViewModel() {
 
   this.clearFilter = function() {
     places().forEach(function(place) {
-      place.listItem.show();
+      place.$listItem.show();
       place.mapMarker.setVisible(true);
       place.mapMarker.set('animation', null);
       place.closeInfoWindow();
