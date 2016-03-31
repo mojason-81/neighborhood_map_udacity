@@ -55,6 +55,11 @@ li .place-list-btn, .reinit-list-btn {
   flex-wrap: nowrap;
 }
 
+.map-info-window {
+  max-width: 35vw;
+  max-height: 35vh;
+}
+
 #map-area {
   flex-basis: 0;
   padding-left: 0;
@@ -82,13 +87,20 @@ li .place-list-btn, .reinit-list-btn {
 
 @media screen and (max-width: 568px) {
   #sidebar {
+    flex-grow: 1;
     display: none;
+    font-size: 0.75em;
+  }
+
+  #map-area {
+    flex-grow: 2;
   }
 }
 
 @media screen and (min-width: 568px) and (max-width: 768px) {
   #sidebar {
     flex-grow: 1;
+    font-size: 0.75em;
   }
 
   #map-area {

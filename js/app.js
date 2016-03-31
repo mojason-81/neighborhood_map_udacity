@@ -5,52 +5,32 @@ var places = ko.observableArray([
     lat: 39.039148,
     lng: -94.348433,
     title: "Stroud's",
-    id: 'strouds',
-    listItem: '',/*Later set as an object*/
-    mapMarker: '',/*Later set as an object*/
-    closeInfoWindow: ''/*Later set as a function*/,
-    openInfoWindow: ''/*Later set as a function*/
+    id: 'strouds'
   },
   {
     lat: 39.035531,
     lng: -94.341660,
     title: 'Corner Cafe',
-    id: 'corner-cafe',
-    listItem: '',/*Later set as an object*/
-    mapMarker: '',/*Later set as an object*/
-    closeInfoWindow: ''/*Later set as a function*/,
-    openInfoWindow: ''/*Later set as a function*/
+    id: 'corner-cafe'
   },
   {
     lat: 39.030588,
     lng: -94.357518,
     title: 'Natural Grocers',
     infoWindow: '',
-    id: 'natural-grocers',
-    listItem: '',/*Later set as an object*/
-    mapMarker: '',/*Later set as an object*/
-    closeInfoWindow: ''/*Later set as a function*/,
-    openInfoWindow: ''/*Later set as a function*/
+    id: 'natural-grocers'
   },
   {
     lat: 39.034521,
     lng: -94.351333,
     title: 'Little Blue River',
-    id: 'little-blue-river',
-    listItem: '',/*Later set as an object*/
-    mapMarker: '',/*Later set as an object*/
-    closeInfoWindow: ''/*Later set as a function*/,
-    openInfoWindow: ''/*Later set as a function*/
+    id: 'little-blue-river'
   },
   {
     lat: 39.036698,
     lng: -94.357593,
     title: 'Costco',
-    id: 'costco',
-    listItem: '',/*Later set as an object*/
-    mapMarker: '',/*Later set as an object*/
-    closeInfoWindow: ''/*Later set as a function*/,
-    openInfoWindow: ''/*Later set as a function*/
+    id: 'costco'
   }
 ]);
 
@@ -85,22 +65,22 @@ function initGoogleMap() {
     });
 
     if (data.title === "Stroud's") {
-      var linkString = "<h5>Stroud's Restaurant</h5>" +
+      var linkString = "<div class='map-info-window'><h5>Stroud's Restaurant</h5>" +
       "<p>The year was 1933. Prohibition had just been repealed, " +
       "we were between two World Wars and Stroud’s Restaurant was built.<br>" +
       "--Quoted from Stroud's website.</p>" +
-      "<a href='http://independence.stroudsrestaurant.com/' target=_blank>Click here for stroudsrestaurant.com</a>";
+      "<a href='http://independence.stroudsrestaurant.com/' target=_blank>Click here for stroudsrestaurant.com</a></div>";
       infoWindow.setContent(linkString);
     }
 
     if (data.title === 'Corner Cafe') {
-      var linkString = "<h5>Corner Cafe</h5>" +
+      var linkString = "<div class='map-info-window'><h5>Corner Cafe</h5>" +
       "<p>There had always been a small restaurant at the ‘Corner’ in Riverside Missouri, " +
       "but before 1983 it had changed names and hands several times. Many of the locals " +
       "wanted to see a return to the old style cafe that had existed there years before and " +
       "was an icon of its time (Reese’s Cafe).<br>" +
       "--Quoted from Corner Cafe's website.</p><br>" +
-      "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a>";
+      "<a href='http://www.thecornercafe.com/' target=_blank>Click here for thecornercafe.com</a></div>";
       infoWindow.setContent(linkString);
     }
 
@@ -111,7 +91,7 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = "<h5>Natural Grocers</h5>" +
+          var linkString = "<div class='map-info-window'><h5>Natural Grocers</h5>" +
                            "<p>Our company has been in business since 1955. We are " +
                            "a company that is built on great intent and integrity. " +
                            "From the beginning we established a foundation we refer " +
@@ -121,12 +101,13 @@ function initGoogleMap() {
                            "<a href='https://www.naturalgrocers.com/about/our-five-founding-principles/' target=_blank>https://www.naturalgrocers.com/about/our-five-founding-principles/</a><br>" +
                            "<a href='https://www.naturalgrocers.com/about/the-natural-grocers-story/' target=_blank>https://www.naturalgrocers.com/about/the-natural-grocers-story/</a><br>";
           response[3].forEach(function(entry) {
-            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>';
           });
+          linkString += "</div>"
           infoWindow.setContent(linkString);
         },
         fail: function() {
-          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.');
         }
       });
     }
@@ -142,18 +123,19 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = "<h5>Battle of Little Blue River, American Civil War</h5>" +
+          var linkString = "<div class='map-info-window'><h5>Battle of Little Blue River, American Civil War</h5>" +
                            "<p>The Battle of Little Blue River was a battle of the American Civil War," +
                            "occurring on October 21, 1864 in Jackson County, Missouri during Price's Raid. " +
                            "</p><p>Learn more by clicking on the links below.</p>" +
-                           "<a href='https://www.nps.gov/abpp/battles/mo024.htm' target=_blank>https://www.nps.gov/abpp/battles/mo024.htm</a><br>"
+                           "<a href='https://www.nps.gov/abpp/battles/mo024.htm' target=_blank>https://www.nps.gov/abpp/battles/mo024.htm</a><br>";
           response[3].forEach(function(entry) {
-            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a>'
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a>';
           });
+          linkString += "</div>"
           infoWindow.setContent(linkString);
         },
         fail: function() {
-          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.');
         }
       });
     }
@@ -165,16 +147,17 @@ function initGoogleMap() {
         jsonp: 'callback',
         headers: {'Api-User-Agent': 'jforce/udacity-project/jason@mojason.com'},
         success: function(response) {
-          var linkString = "<h5>Costco</h5>" +
+          var linkString = "<div class='map-info-window'><h5>Costco</h5>" +
                            "<p>If you don't know what Costco is, click one of these links</p>" +
                            "<a href='http://www.costco.com'>www.costco.com</a><br>";
           response[3].forEach(function(entry) {
-            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>'
+            linkString += '<a href="' + response[3] + '" target=_blank>' + entry + '</a><br>';
           });
+          linkString += "</div>"
           infoWindow.setContent(linkString);
         },
         fail: function() {
-          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.')
+          infoWindow.setContent('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.');
         }
       });
     }
@@ -201,7 +184,6 @@ function initGoogleMap() {
             place.listItem.show();
             place.openInfoWindow();
           } else {
-            place.listItem.hide();
             place.closeInfoWindow();
             place.mapMarker.setAnimation(null);
           }
@@ -215,7 +197,7 @@ function initGoogleMap() {
         place.closeInfoWindow();
         place.mapMarker.setAnimation(null);
       });
-    })
+    });
 
     data.closeInfoWindow = function() {
       infoWindow.close(googleMap, marker);
@@ -260,17 +242,17 @@ function initGoogleMap() {
     $(controlUI).click(function(e) {
       $('#sidebar').slideToggle();
     });
-  };
+  }
 
   // Create the DIV to hold the Toggle List control and call the
   // ControlListView() constructor passing in this DIV and the map on which
   // the control is to be created.
   var ControlListViewDiv = document.createElement('div');
-  var ControlListView = new ControlListView(ControlListViewDiv, googleMap);
+  ControlListView = new ControlListView(ControlListViewDiv, googleMap);
 
   ControlListViewDiv.index = 1;
   googleMap.controls[google.maps.ControlPosition.LEFT].push(ControlListViewDiv);
-};
+}
 
 function ViewModel() {
   var self = this;
@@ -299,15 +281,12 @@ function ViewModel() {
     // if this one is hidden, show it and hide everything else
     places().forEach(function(place) {
       if (event.target.id != place.id) {
-        place.listItem.hide();
-        // item.mapMarker.trigger('click');
         place.mapMarker.set('animation', null);
         place.closeInfoWindow();
       }
       else {
         place.openInfoWindow();
         place.mapMarker.set('animation', 1);
-        place.listItem.show();
       }
     });
   };
@@ -320,6 +299,6 @@ function ViewModel() {
       place.closeInfoWindow();
     });
   };
-};
+}
 
 ko.applyBindings(new ViewModel());
