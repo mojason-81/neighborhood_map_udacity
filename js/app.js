@@ -182,29 +182,12 @@ function ViewModel() {
   this.placeList = ko.observableArray([]);
 
   places().forEach(function(place) {
+    // console.log(place);
     place.visible = ko.observable(true);
     self.placeList.push(place);
-    console.log(place.visible());
   });
 
   this.filterValue = ko.observable('');
-
-  // Filter the list and trigger the marker on user
-  // input into the filter text input.
-  this.filterList = ko.computed(function() {
-    places().forEach(function(place) {
-      var searchParam = self.filterValue().toLowerCase();
-      var toBeSearched = place.title.toLowerCase();
-      if (!toBeSearched.indexOf(searchParam) || !searchParam) {
-        place.visible(true);
-        console.log(place);
-        place.triggerMarker(place.mapMarker);
-      } else {
-        place.visible(false);
-        place.closeInfoWindow();
-      }
-    })
-  })
 
   // Called by list item clicks.
   this.triggerMapMarker = function(name, event) {
@@ -216,6 +199,21 @@ function ViewModel() {
       }
     });
   };
+
+  // Filter the list and trigger the marker on user
+  // input into the filter text input.
+  this.filterList = ko.computed(function() {
+    self.placeList().forEach(function(place) {
+      var searchParam = self.filterValue().toLowerCase();
+      var toBeSearched = place.title.toLowerCase();
+      place.visible(!toBeSearched.indexOf(searchParam) || !searchParam);
+      console.log(place);
+      console.log(place.mapMarker);
+      if (place.visible) {
+        place.triggerMarker(place.mapMarker)
+      }
+    })
+  })
 }
 
 ko.applyBindings(new ViewModel());
