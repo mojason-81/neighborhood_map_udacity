@@ -8,10 +8,10 @@ var places = ko.observableArray([
     id: 'silverstein-arena',
   },
   {
-    lat: 39.035531,
-    lng: -94.341660,
-    title: 'Corner Cafe',
-    id: 'corner-cafe',
+    lat: 39.039778,
+    lng: -94.347704,
+    title: 'Interstate I-70',
+    id: 'interstate-i-70',
   },
   {
     lat: 39.030588,
@@ -40,19 +40,16 @@ function initGoogleMap() {
   // Create map
   var googleMap = new google.maps.Map(document.getElementById("map"), {
     center: {
-      lat: 39.035,
-      lng: -94.352
+      lat: 39.036018,
+      lng: -94.353780
     },
-    zoom: 15,
+    zoom: 16,
     fullscreenControl: true,
     zoomControl: false,
     streetViewControl: false
   });
 
-  var $getWikiInfo = function(data) {
-    console.log(data);
-
-}
+var ajaxFailureCount = 0;
 
   // Loop over markers array creating new map markers.
   places().forEach(function(data) {
@@ -80,10 +77,13 @@ function initGoogleMap() {
           linkString += '<a href="' + entry + '" target=_blank>' + entry + '</a><br>';
         });
         linkString += "</div>"
-        console.log(response);
         data.contentString = linkString;
       }
     }).fail(function() {
+      if (ajaxFailureCount === 0) {
+        alert('Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.');
+        ajaxFailureCount++;
+      }
       data.contentString = 'Oops!  Looks like there was an issue getting data from Wikipedia.  Try refreshing the page.';
     }).done(function() {
       infoWindow = new google.maps.InfoWindow({
@@ -97,39 +97,30 @@ function initGoogleMap() {
     // Set the marker we just created as a property on the list
     // we just looped over so we can have it available for later.
     data.mapMarker = marker;
-    data.listItem = listButton;
 
     // Add listener for clicks to the marker we just created.
     marker.addListener('click', function(event) {
-      if (marker.getAnimation() !== null) {
-        marker.setAnimation(null);
-
-        // Grab clear list button anc call it's click event
-        $('#clear-list-btn').trigger('click');
-        infoWindow.close(googleMap, marker);
-      } else {
-        infoWindow.open(googleMap, marker);
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-
-        places().forEach(function(place) {
-          if (listButton.text() === place.title) {
-            place.listItem.show();
-            place.openInfoWindow();
-          } else {
-            place.closeInfoWindow();
-            place.mapMarker.setAnimation(null);
-          }
-        });
-      }
+      data.triggerMarker(marker);
+      places().forEach(function(place) {
+        if (data.title === place.title) {
+          place.openInfoWindow();
+        } else {
+          place.closeInfoWindow();
+        }
+      });
     });
 
     googleMap.addListener('click', function() {
       places().forEach(function(place) {
-        place.listItem.show();
         place.closeInfoWindow();
-        place.mapMarker.setAnimation(null);
       });
     });
+
+    data.triggerMarker = function(marker) {
+      infoWindow.open(googleMap, marker);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function() { marker.setAnimation(null); }, 700);
+    }.bind(this);
 
     data.closeInfoWindow = function() {
       infoWindow.close(googleMap, marker);
@@ -189,46 +180,40 @@ function initGoogleMap() {
 function ViewModel() {
   var self = this;
   this.placeList = ko.observableArray([]);
-  this.placeFilter = ko.observable();
-  $(document).ready($('#place-filter-input').focus());
-
-  this.filterPlaces = function() {
-    places().forEach(function(place) {
-      if (self.placeFilter().toLowerCase() != place.title.toLowerCase()) {
-        place.mapMarker.setVisible(false);
-        place.listItem.hide();
-      } else {
-        place.mapMarker.setVisible(true);
-        place.listItem.show();
-        place.openInfoWindow();
-      }
-    });
-  };
 
   places().forEach(function(place) {
+    place.visible = ko.observable(true);
     self.placeList.push(place);
+    console.log(place.visible());
   });
 
-  this.filterList = function(name, event) {
-    // if this one is hidden, show it and hide everything else
+  this.filterValue = ko.observable('');
+
+  // Filter the list and trigger the marker on user
+  // input into the filter text input.
+  this.filterList = ko.computed(function() {
     places().forEach(function(place) {
-      if (event.target.id != place.id) {
-        place.mapMarker.set('animation', null);
+      var searchParam = self.filterValue().toLowerCase();
+      var toBeSearched = place.title.toLowerCase();
+      if (!toBeSearched.indexOf(searchParam) || !searchParam) {
+        place.visible(true);
+        console.log(place);
+        place.triggerMarker(place.mapMarker);
+      } else {
+        place.visible(false);
         place.closeInfoWindow();
       }
-      else {
-        place.openInfoWindow();
-        place.mapMarker.set('animation', 1);
-      }
-    });
-  };
+    })
+  })
 
-  this.clearFilter = function() {
+  // Called by list item clicks.
+  this.triggerMapMarker = function(name, event) {
     places().forEach(function(place) {
-      place.listItem.show();
-      place.mapMarker.setVisible(true);
-      place.mapMarker.set('animation', null);
-      place.closeInfoWindow();
+      if (event.target.id === place.id) {
+        place.triggerMarker(place.mapMarker);
+      } else {
+        place.closeInfoWindow();
+      }
     });
   };
 }
