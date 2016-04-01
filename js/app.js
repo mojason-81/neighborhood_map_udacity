@@ -34,6 +34,8 @@ var places = ko.observableArray([
   }
 ]);
 
+var mapMarkersExist = false;
+
 // Initialize Google Map
 function initGoogleMap() {
 
@@ -49,7 +51,9 @@ function initGoogleMap() {
     streetViewControl: false
   });
 
-var ajaxFailureCount = 0;
+  var ajaxFailureCount = 0;
+
+  // googleMap.addListener('click', function() {do stuff});
 
   // Loop over markers array creating new map markers.
   places().forEach(function(data) {
@@ -101,6 +105,8 @@ var ajaxFailureCount = 0;
     // Add listener for clicks to the marker we just created.
     marker.addListener('click', function(event) {
       data.triggerMarker(marker);
+      console.log(event);
+      console.log(event.eventTarget);
       places().forEach(function(place) {
         if (data.title === place.title) {
           place.openInfoWindow();
@@ -129,6 +135,8 @@ var ajaxFailureCount = 0;
     data.openInfoWindow = function() {
       infoWindow.open(googleMap, marker);
     }.bind(this);
+
+    mapMarkersExist = true;
   });
 
   //  Create custom control for displaying / hiding list view
@@ -203,17 +211,25 @@ function ViewModel() {
   // Filter the list and trigger the marker on user
   // input into the filter text input.
   this.filterList = ko.computed(function() {
-    self.placeList().forEach(function(place) {
-      var searchParam = self.filterValue().toLowerCase();
-      var toBeSearched = place.title.toLowerCase();
-      place.visible(!toBeSearched.indexOf(searchParam) || !searchParam);
-      console.log(place);
-      console.log(place.mapMarker);
-      if (place.visible) {
-        place.triggerMarker(place.mapMarker)
+    places().forEach(function(place) {
+
+      // Check for existence of mapMarker since on initial render, the marker
+      // doesn't yet exist by the time filterList() is called / built.
+      if (place.mapMarker) {
+        var searchParam = self.filterValue().toLowerCase();
+        var toBeSearched = place.title.toLowerCase();
+
+        // Set visible binding to the folowing boolean.  Filters on type.
+        place.visible(!toBeSearched.indexOf(searchParam) || !searchParam);
+
+        if (place.visible() && searchParam) {
+          place.triggerMarker(place.mapMarker)
+        }
+
       }
     })
-  })
+  }, this);
+
 }
 
 ko.applyBindings(new ViewModel());
