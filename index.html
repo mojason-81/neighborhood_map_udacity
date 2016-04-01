@@ -20,22 +20,24 @@
     <section class="sidebar" id="sidebar">
       <div class="nav list-group">
         <div class="input-group">
-          <input type="text" class="form-control boxy" id="place-filter-input" placeholder="Filter" data-bind="textInput: placeFilter" name="srch-term"/>
+          <input type="text" class="form-control boxy" id="place-filter-input" placeholder="Filter" data-bind="textInput: filterValue" name="srch-term"/>
           <div class="input-group-btn">
-            <button class="btn btn-default boxy" data-bind="click: filterPlaces"><i class="glyphicon glyphicon-filter"></i></button>
+            <button class="btn btn-default boxy"><i class="glyphicon glyphicon-filter"></i></button>
           </div>
         </div>
         <ul class="nav nav-stacked" data-bind="foreach: placeList">
           <li class="nav-justified">
-            <button type="button" class="boxy place-list-btn" data-bind="attr: {id: $data.id}, text: $data.title, click: $parent.filterList"></button>
+            <button type="button" class="boxy place-list-btn" data-bind="visible: $data.visible, attr: {id: $data.id}, text: $data.title, click: $parent.triggerMapMarker"></button>
           </li>
         </ul>
-        <button type="button" class="boxy reinit-list-btn" id="clear-list-btn" data-bind="click: clearFilter">Clear Filter</button>
       </div>
     </section>
 
     <section class="full-window-height" id="map-area">
       <div id="map">
+        <!-- Loading these scripts at the bottom of the body causes a race condition.
+          Sometimes they finish loading before the call to google map api, sometimes
+          sometimes they don't and the application fails to load. -->
         <script src="assets/lib/jquery-2.2.1.min.js"></script>
         <script src="assets/lib/knockout-3.4.0.js"></script>
         <script src="js/app.js"></script>
