@@ -34,6 +34,11 @@ var places = ko.observableArray([
   }
 ]);
 
+// Handle google map failing to load.
+function googleError() {
+  alert("Oops! Looks like there was a problem loading Google Map.  Try refreshing the page.");
+}
+
 // Initialize Google Map
 function initGoogleMap() {
 
@@ -73,6 +78,14 @@ function initGoogleMap() {
 
     var infoWindow;
 
+    var apiTimeout = setTimeout(function() {
+      this.error('Awe Crap! An error occurred.  Failed to load data.');
+    }, 5000);
+
+
+    // Watch for ajax calls that take too long indicating a problem.
+    apiTimeout;
+
     // TODO Future enhancement. Assign this ajax call as a variable outside the
     // forEach() loop. On marker clicks, pass in the marker and make the ajax
     // call then.
@@ -89,6 +102,7 @@ function initGoogleMap() {
         });
         linkString += "</div>"
         data.contentString = linkString;
+        clearTimeout(apiTimeout);
       }
     }).fail(function() {
 
@@ -220,7 +234,7 @@ function ViewModel() {
       var toBeSearched = place.title.toLowerCase();
 
       // Set visible binding to the folowing boolean.  Filters on type.
-      place.visible(!toBeSearched.indexOf(searchParam) || !searchParam);
+      place.visible(toBeSearched.indexOf(searchParam) > -1);
 
       // Have to add check for existence of mapMarker since on initial render,
       // the marker doesn't yet exist by the time filterList() is called / built.
