@@ -20,32 +20,27 @@
     <section class="sidebar" id="sidebar">
       <div class="nav list-group">
         <div class="input-group">
-          <input type="text" class="form-control boxy" id="place-filter-input" placeholder="Filter" data-bind="textInput: placeFilter" name="srch-term"/>
-          <div class="input-group-btn">
-            <button class="btn btn-default boxy" data-bind="click: filterPlaces"><i class="glyphicon glyphicon-filter"></i></button>
-          </div>
+          <input type="text" class="form-control boxy" id="place-filter-input" placeholder="Filter" data-bind="textInput: filterValue" name="srch-term" autofocus/>
         </div>
         <ul class="nav nav-stacked" data-bind="foreach: placeList">
           <li class="nav-justified">
-            <button type="button" class="boxy place-list-btn" data-bind="attr: {id: $data.id}, text: $data.title, click: $parent.filterList"></button>
+            <button type="button" class="boxy place-list-btn" data-bind="visible: $data.visible, attr: {id: $data.id}, text: $data.title, click: $parent.triggerMapMarker"></button>
           </li>
         </ul>
-        <button type="button" class="boxy reinit-list-btn" id="clear-list-btn" data-bind="click: clearFilter">Clear Filter</button>
       </div>
     </section>
 
     <section class="full-window-height" id="map-area">
       <div id="map">
-        <script src="assets/lib/jquery-2.2.1.min.js"></script>
-        <script src="assets/lib/knockout-3.4.0.js"></script>
-        <script src="js/app.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDEdBNtICL0HXO3B0bbb1R3QUetJyH6HU&callback=initGoogleMap"></script>
       </div>
     </section>
   </main>
 
   <footer>
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
+    <script src="assets/lib/jquery-2.2.1.min.js"></script>
+    <script src="assets/lib/knockout-3.4.0.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDEdBNtICL0HXO3B0bbb1R3QUetJyH6HU&callback=initGoogleMap" async defer></script>
   </footer>
 </body>
 
