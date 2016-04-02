@@ -112,8 +112,6 @@ function initGoogleMap() {
     // Add listener for clicks to the marker we just created.
     marker.addListener('click', function(event) {
       data.triggerMarker(marker);
-      console.log(event);
-      console.log(event.eventTarget);
       places().forEach(function(place) {
         if (data.title === place.title) {
           place.openInfoWindow();
