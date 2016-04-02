@@ -238,6 +238,10 @@ function ViewModel() {
 
       // Have to add check for existence of mapMarker since on initial render,
       // the marker doesn't yet exist by the time filterList() is called / built.
+      if (place.mapMarker) {
+        place.mapMarker.setVisible(toBeSearched.indexOf(searchParam) > -1);
+      }
+      
       if (place.visible() && searchParam && place.mapMarker) {
         place.triggerMarker(place.mapMarker)
       }
